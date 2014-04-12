@@ -11,8 +11,14 @@ public class TestHandler extends CommandHandler {
     @CommandAlias("show")
     public void showText(Object context,
                          @ParamAlias("msg") String text,
-                         @ParamAlias("num") int number) {
+                         @ParamAlias(value = "num", defaultValue = "5") int number) {
         System.out.println("SHOW! context=" + context + ", text=" + text + ", number=" + number);
+    }
+
+    @CommandAlias(value = {"locate", "where"})
+    public void showAddress(Object context,
+                            @ParamAlias(value = "addr", converter = AddressConverter.class) Address address) {
+        System.out.println("show address: " + address.toString());
     }
 
     @Override
