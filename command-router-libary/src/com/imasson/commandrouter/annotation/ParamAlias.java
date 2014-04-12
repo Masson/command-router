@@ -31,5 +31,5 @@ public @interface ParamAlias {
      * The default value of the parameter in raw String.
      * @return
      */
-    public String defaultValue() default "";
+    public String defaultRaw() default "";
 }

@@ -85,7 +85,7 @@ public abstract class CommandHandler {
             }
             keys[i - 1] = key;
 
-            final String defaultValue = paramAlias.defaultValue();
+            final String defaultValue = paramAlias.defaultRaw();
             defaults[i - 1] = defaultValue.length() > 0 ? defaultValue : null;
 
             ValueConverter converter = findConverter(router, method,

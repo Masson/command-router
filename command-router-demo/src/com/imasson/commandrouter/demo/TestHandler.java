@@ -11,7 +11,7 @@ public class TestHandler extends CommandHandler {
     @CommandAlias("show")
     public void showText(Object context,
                          @ParamAlias("msg") String text,
-                         @ParamAlias(value = "num", defaultValue = "5") int number) {
+                         @ParamAlias(value = "num", defaultRaw = "5") int number) {
         System.out.println("SHOW! context=" + context + ", text=" + text + ", number=" + number);
     }
 
