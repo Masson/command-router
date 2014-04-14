@@ -55,6 +55,7 @@ public abstract class CommandHandler {
             throw new CommandInvalidException("Invalid command method, " +
                     "no params found", this, method);
         }
+        Class<?> contextType = paramTypes[0];
         final int argCount = paramTypes.length - 1;
         Class<?>[] keyParamTypes = new Class<?>[argCount];
         System.arraycopy(paramTypes, 1, keyParamTypes, 0, keyParamTypes.length);
@@ -103,6 +104,7 @@ public abstract class CommandHandler {
         meta.paramKeys = keys;
         meta.defaultValues = defaults;
         meta.converters = converters;
+        meta.contextType = contextType;
         return meta;
     }
 
@@ -140,7 +142,7 @@ public abstract class CommandHandler {
         Object[] params = generateParams(op, meta);
 
         Class<?>[] paramTypes = new Class<?>[meta.paramTypes.length + 1];
-        paramTypes[0] = Object.class;
+        paramTypes[0] = meta.contextType;
         System.arraycopy(meta.paramTypes, 0, paramTypes, 1, meta.paramTypes.length);
 
         try {
@@ -201,6 +203,7 @@ public abstract class CommandHandler {
         private String[] defaultValues;
         private Class<?>[] paramTypes;
         private ValueConverter[] converters;
+        private Class<?> contextType;
 
         String dump() {
             return "\'" + method + '\'' +
