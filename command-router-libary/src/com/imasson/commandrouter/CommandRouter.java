@@ -1,5 +1,6 @@
 package com.imasson.commandrouter;
 
+import com.imasson.commandrouter.annotation.DefaultHandler;
 import com.imasson.commandrouter.annotation.HandlerAlias;
 import com.imasson.commandrouter.converter.ValueConverter;
 import com.imasson.commandrouter.converter.ValueConverterException;
@@ -22,6 +23,7 @@ public final class CommandRouter {
     private AbstractDriver mDriver;
     private Map<String, CommandHandler> mHandlerMap = new HashMap<String, CommandHandler>();
     private Map<String, ValueConverter> mConverterMap = new HashMap<String, ValueConverter>();
+    private CommandHandler mDefaultHandler;
 
     CommandRouter() {
     }
@@ -44,11 +46,21 @@ public final class CommandRouter {
             throw new CommandRouterException("Argument 'handler' is null");
         }
 
-        HandlerAlias handlerAlias = handler.getClass().getAnnotation(HandlerAlias.class);
+        final Class<? extends CommandHandler> handlerClass = handler.getClass();
+        HandlerAlias handlerAlias = handlerClass.getAnnotation(HandlerAlias.class);
         if (handlerAlias == null) {
             if (!debug) return;
             throw new CommandRouterException("The CommandHandler does not define alias: "
-                    + handler.getClass().getName());
+                    + handlerClass.getName());
+        }
+
+        DefaultHandler defaultAnnotation = handlerClass.getAnnotation(DefaultHandler.class);
+        if (defaultAnnotation != null) {
+            if (mDefaultHandler == null) {
+                mDefaultHandler = handler;
+            } else {
+                if (debug) throw new CommandRouterException("More than one default CommandHandler!");
+            }
         }
 
         mHandlerMap.put(handlerAlias.value(), handler);
@@ -122,8 +134,12 @@ public final class CommandRouter {
 
         CommandHandler handler = mHandlerMap.get(op.getHandlerName());
         if (handler == null) {
-            if (!debug) return;
-            throw new CommandRouterException("CommandHandler not found", op);
+            if (mDefaultHandler != null) {
+                handler = mDefaultHandler;
+            } else {
+                if (!debug) return;
+                throw new CommandRouterException("CommandHandler not found", op);
+            }
         }
 
         try {
