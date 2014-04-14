@@ -19,10 +19,10 @@ public class Main {
 
         // Sample 1: hello world
         final String rawCommand1 = "kk://trial/show?msg=helloworld";
-        router.invokeCommand("I'm context", rawCommand1);
+        router.executeCommand("I'm context", rawCommand1);
 
         // Sample 2: custom converter
         final String rawCommand2 = "kk://trial/locate?addr=N%20Western%20Avenue,Chicago,90027";
-        router.invokeCommand(null, rawCommand2);
+        router.executeCommand(null, rawCommand2);
     }
 }

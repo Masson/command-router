@@ -31,7 +31,7 @@ public class TestHandler extends CommandHandler {
 ```
 and just 'execute' the command by CommandRouter:
 ```
-router.invokeCommand(this, "cmd://trial/show?msg=helloworld&repeat=3");
+router.executeCommand(this, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
 Enjoy the clean code!
 
@@ -87,7 +87,7 @@ CommandRouter router = new CommandRouterBuilder()
 
 Execute the textual command by CommandRouter where you need it. Your context object will pass to the command method.
 ```
-router.invokeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
+router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
 
 **Using in android**

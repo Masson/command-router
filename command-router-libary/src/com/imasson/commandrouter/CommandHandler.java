@@ -126,7 +126,7 @@ public abstract class CommandHandler {
         return converter;
     }
 
-    void invokeCommand(CommandRouter router, CommandRouter.Op op) throws CommandHandlerException {
+    void executeCommand(CommandRouter router, CommandRouter.Op op) throws CommandHandlerException {
         setup(router);
 
         final String commandName = op.getCommandName();

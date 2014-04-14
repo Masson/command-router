@@ -111,8 +111,8 @@ public final class CommandRouter {
         this.debug = debug;
     }
 
-    public void invokeCommand(Object context, Object... args) {
-        Op op = null;
+    public void executeCommand(Object context, Object... args) {
+        Op op;
         try {
             op = mDriver.parseCommand(context, args);
         } catch (DriverException ex) {
@@ -127,7 +127,7 @@ public final class CommandRouter {
         }
 
         try {
-            handler.invokeCommand(this, op);
+            handler.executeCommand(this, op);
         } catch (CommandHandlerException ex) {
             if (debug) throw ex;
         } catch (ValueConverterException ex) {
