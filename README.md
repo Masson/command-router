@@ -9,13 +9,13 @@ if you want to parse a textual command like this:
 "cmd://trial/show?msg=helloworld&repeat=3 
 ```
 in order to execute the follow code:
-```
+```java
 for (int i = 0; i < 3; i++) {
    System.out.println("helloworld")
 }
 ```
 You don't need to write any code to parse text and do the conditional. Use annotations of CommandRouter to define a handler:
-```
+```java
 @HandlerAlias("trial")
 public class TestHandler extends CommandHandler {
 
@@ -30,14 +30,14 @@ public class TestHandler extends CommandHandler {
 }
 ```
 and just 'execute' the command by CommandRouter:
-```
+```java
 router.executeCommand(this, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
 Enjoy the clean code!
 
 ## Usage
 
-**STEP 1: create CommandHandler and command methods**
+### STEP 1: create CommandHandler and command methods
 
 Create subclass of ```CommandHandler```. A *Command Handler* is a group of command method. Each command method is invoke by one command.
 
@@ -49,7 +49,7 @@ Use these three important annotations to decorate your class:
   - ```defaultRaw```: the textual value before unmashell.
   - ```converter```: the converter class to handler this type of param.
      
-```
+```java
 @HandlerAlias("trial")
 public class TestHandler extends CommandHandler {
 
@@ -64,7 +64,7 @@ public class TestHandler extends CommandHandler {
 
 > Notice: the first param of a command method must be the context Object. It is not one of the command params.
 
-**STEP 2: build instance of CommandRouter**
+### STEP 2: build instance of CommandRouter
 
 Before build the ```CommandRouter```, you should determine the command format and chose the right ```CommandDriver```. The follow command format is build-in supported:
 
@@ -75,7 +75,7 @@ JsonDriver*        | Json             | ```{handler:"trial", command:"show",para
 CommandLineDriver* | shell-style      | ```trial show --msg helloworld```
 
 Recommend to use ```CommandRouterBuilder``` to build router instance:
-```
+```java
 CommandRouter router = new CommandRouterBuilder()
                 .setDriver(new UriDriver())
                 .addCommandHandler(TestHandler.class)
@@ -83,21 +83,21 @@ CommandRouter router = new CommandRouterBuilder()
                 .build();
 ```
 
-**STEP 3: execute the command**
+### STEP 3: execute the command
 
 Execute the textual command by CommandRouter where you need it. Your context object will pass to the command method.
-```
+```java
 router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
 
-**Using in android**
+### Using in android
 
 Ensure that this line is added to your proguard config:
 ```
 -keepattributes *Annotation*
 ```
 
-## Advanced (comming soon)
+## Advanced (coming soon)
 
 **custom value converter**
 
