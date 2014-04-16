@@ -80,7 +80,7 @@ public final class CommandRouter {
         mConverterMap.put(type.getName(), converter);
     }
 
-    public void addValueConverter(Class<?> type, Class<?> converterClass) {
+    public void addValueConverter(Class<?> type, Class<? extends ValueConverter> converterClass) {
         if (converterClass == null) {
             if (!debug) return;
             throw new CommandRouterException("Argument 'converterClass' is null");

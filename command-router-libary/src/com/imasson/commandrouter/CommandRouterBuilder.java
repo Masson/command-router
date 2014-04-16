@@ -45,7 +45,9 @@ public final class CommandRouterBuilder {
             CommandHandler handler = null;
             try {
                 final Class<?> handlerClass = Class.forName(handlerClassName);
-                handler = (CommandHandler) handlerClass.newInstance();
+                if (handlerClass != null && CommandHandler.class.isAssignableFrom(handlerClass)) {
+                    handler = (CommandHandler) handlerClass.newInstance();
+                }
             } catch (Exception e) {
             }
             if (handler != null) {
@@ -60,7 +62,8 @@ public final class CommandRouterBuilder {
         return this;
     }
 
-    public CommandRouterBuilder addValueConverter(Class<?> type, Class<?> converterClass) {
+    public CommandRouterBuilder addValueConverter(Class<?> type,
+                                                  Class<? extends ValueConverter> converterClass) {
         router.addValueConverter(type, converterClass);
         return this;
     }
@@ -74,8 +77,9 @@ public final class CommandRouterBuilder {
         } catch (Exception e) {
         }
 
-        if (type != null && converterClass != null) {
-            return addValueConverter(type, converterClass);
+        if (type != null && converterClass != null
+                && ValueConverter.class.isAssignableFrom(converterClass)) {
+            return addValueConverter(type, (Class<? extends ValueConverter>) converterClass);
         }
         return this;
     }
