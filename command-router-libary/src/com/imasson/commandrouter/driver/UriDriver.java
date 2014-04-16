@@ -3,6 +3,7 @@ package com.imasson.commandrouter.driver;
 import com.imasson.commandrouter.CommandRouter;
 
 import java.net.URI;
+import java.net.URLDecoder;
 
 /**
  * The command driver that parse command from {@link URI} or URI in String form.
@@ -11,9 +12,11 @@ import java.net.URI;
  */
 public class UriDriver extends AbstractDriver {
 
+    private static final String ENCODING = "utf-8";
+
     @Override
     public CommandRouter.Op parseCommand(Object context, Object... rawArgs) {
-        URI uri = null;
+        URI uri;
 
         final Object rawArg = rawArgs[0];
         if (rawArg instanceof String) {
@@ -41,16 +44,21 @@ public class UriDriver extends AbstractDriver {
 
         CommandRouter.Op op = new CommandRouter.Op(context, host, path);
 
-        try {
-            final String query = uri.getQuery();
-            final String[] querySegments = query.split("&");
-            for (int i = 0; i < querySegments.length; i++) {
-                String seg = querySegments[i];
-                String[] kvpair = seg.split("=");
-                op.addArgument(kvpair[0], kvpair[1]);
+        final String query = uri.getRawQuery();
+        if (query != null) {
+            try {
+                final String[] querySegments = query.split("&");
+                for (int i = 0; i < querySegments.length; i++) {
+                    String seg = querySegments[i];
+                    String[] kvpair = seg.split("=", -2);
+
+                    String key = kvpair[0];
+                    String value = URLDecoder.decode(kvpair[1], ENCODING);
+                    op.addArgument(key, value);
+                }
+            } catch (Exception ex) {
+                throw new DriverException("Error parsing query in URI", ex, rawArgs);
             }
-        } catch (Exception ex) {
-            throw new DriverException("Error parsing query in URI", ex, rawArgs);
         }
 
         return op;
