@@ -164,10 +164,6 @@ public abstract class CommandHandler {
                 rawArgument = meta.defaultValues[i];
             }
 
-            if (rawArgument == null) {
-                throw new CommandHandlerException("Argument not supplied: " + key, op);
-            }
-
             ValueConverter converter = meta.converters[i];
             Class<?> paramType = meta.paramTypes[i];
             Object param = converter.unmarshal(rawArgument, paramType);
@@ -214,6 +210,8 @@ public abstract class CommandHandler {
         }
 
         private String dumpConverters(ValueConverter[] converters) {
+            if (converters.length == 0) return "";
+
             StringBuilder sb = new StringBuilder("[");
             for (ValueConverter vc : converters) {
                 sb.append(vc.getClass().getSimpleName()).append(", ");
