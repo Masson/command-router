@@ -37,9 +37,13 @@ public abstract class CommandHandler {
             CommandMeta meta = generateCommandMeta(router, method);
 
             String[] commandNames = alias.value();
-            for (String name : commandNames) {
-                if (name != null) {
-                    mCommandMap.put(name, meta);
+            if (commandNames == null || commandNames.length == 0) {
+                mCommandMap.put(meta.method, meta);
+            } else {
+                for (String name : commandNames) {
+                    if (name != null) {
+                        mCommandMap.put(name, meta);
+                    }
                 }
             }
         }

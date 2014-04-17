@@ -16,5 +16,5 @@ public @interface CommandAlias {
     /**
      * all names of the command that will be used in raw command.
      */
-    public String[] value();
+    public String[] value() default {};
 }
