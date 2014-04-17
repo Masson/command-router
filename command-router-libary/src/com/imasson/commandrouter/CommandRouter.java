@@ -22,7 +22,8 @@ public final class CommandRouter {
 
     private AbstractDriver mDriver;
     private Map<String, CommandHandler> mHandlerMap = new HashMap<String, CommandHandler>();
-    private Map<String, ValueConverter> mConverterMap = new HashMap<String, ValueConverter>();
+    private Map<String, ValueConverter> mTargetConverterMap = new HashMap<String, ValueConverter>();
+    private Map<String, ValueConverter> mClassConverterMap = new HashMap<String, ValueConverter>();
     private CommandHandler mDefaultHandler;
 
     CommandRouter() {
@@ -77,46 +78,69 @@ public final class CommandRouter {
             throw new CommandRouterException("Argument 'converter' is null");
         }
 
-        mConverterMap.put(type.getName(), converter);
+        mTargetConverterMap.put(type.getName(), converter);
+        mClassConverterMap.put(converter.getClass().getName(), converter);
     }
 
-    public void addValueConverter(Class<?> type, Class<? extends ValueConverter> converterClass) {
-        if (converterClass == null) {
+    public ValueConverter addValueConverter(Class<?> type, Class<? extends ValueConverter> converterClass) {
+        ValueConverter converter = generateValueConverterInstance(converterClass);
+        if (converter != null) {
+            addValueConverter(type, converter);
+        }
+        return converter;
+    }
+
+    public void addCustomValueConverter(ValueConverter converter) {
+        if (converter == null) {
             if (!debug) return;
+            throw new CommandRouterException("Argument 'converter' is null");
+        }
+
+        mClassConverterMap.put(converter.getClass().getName(), converter);
+    }
+
+    public ValueConverter addCustomValueConverter(Class<? extends ValueConverter> converterClass) {
+        ValueConverter converter = generateValueConverterInstance(converterClass);
+        if (converter != null) {
+            mClassConverterMap.put(converter.getClass().getName(), converter);
+        }
+        return converter;
+    }
+
+    private ValueConverter generateValueConverterInstance(Class<? extends ValueConverter> converterClass) {
+        if (converterClass == null) {
+            if (!debug) return null;
             throw new CommandRouterException("Argument 'converterClass' is null");
         }
 
         ValueConverter converter = null;
         try {
-            converterClass.newInstance();
+            converter = converterClass.newInstance();
         } catch (Exception e) {
-            if (!debug) return;
-            throw new CommandRouterException(e);
+            if (debug) throw new CommandRouterException(e);
         }
 
-        if (converter != null) {
-            addValueConverter(type, converter);
-        }
+        return converter;
     }
 
-    public ValueConverter getValueConverter(Class<?> type) {
+    public ValueConverter getValueConverterByTargetType(Class<?> type) {
         if (type == null) {
             if (!debug) return null;
             throw new CommandRouterException("Argument 'type' is null");
         }
 
         final String typeName = type.getName();
-        return mConverterMap.get(typeName);
+        return mTargetConverterMap.get(typeName);
     }
 
-    ValueConverter getValueConverterInstance(Class<?> converterClass) {
-        final Collection<ValueConverter> converters = mConverterMap.values();
-        for (ValueConverter converter : converters) {
-            if (converter != null && converter.getClass().equals(converterClass)) {
-                return converter;
-            }
+    ValueConverter getValueConverterByClass(Class<?> converterClass) {
+        if (converterClass == null) {
+            if (!debug) return null;
+            throw new CommandRouterException("Argument 'converterClass' is null");
         }
-        return null;
+
+        final String typeName = converterClass.getName();
+        return mClassConverterMap.get(typeName);
     }
 
     public void setDebug(boolean debug) {

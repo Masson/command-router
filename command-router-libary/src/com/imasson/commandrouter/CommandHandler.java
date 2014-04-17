@@ -89,7 +89,7 @@ public abstract class CommandHandler {
             final String defaultValue = paramAlias.defaultRaw();
             defaults[i - 1] = defaultValue.length() > 0 ? defaultValue : null;
 
-            ValueConverter converter = findConverter(router, method,
+            ValueConverter converter = findConverter(router,
                     keyParamTypes[i - 1], paramAlias.converter());
             if (converter == null) {
                 throw new CommandInvalidException("Invalid command argument," +
@@ -108,23 +108,19 @@ public abstract class CommandHandler {
         return meta;
     }
 
-    private ValueConverter findConverter(CommandRouter router, Method method, Class<?> paramType,
-                                         Class<? extends ValueConverter> defaultClass) {
+    private ValueConverter findConverter(CommandRouter router, Class<?> paramType,
+                                         Class<? extends ValueConverter> customConverter) {
         ValueConverter converter;
-        if (!StringConverter.class.equals(defaultClass)) {
-            converter = router.getValueConverterInstance(defaultClass);
+        // StringConverter will be regarded as default value converter.
+        if (customConverter != null && !StringConverter.class.equals(customConverter)) {
+            converter = router.getValueConverterByClass(customConverter);
             if (converter == null) {
-                try {
-                    converter = defaultClass.newInstance();
-                } catch (Exception e) {
-                    throw new CommandInvalidException("Can not make converter: "
-                            + defaultClass.getName(), e, this, method);
-                }
+                converter = router.addCustomValueConverter(customConverter);
             }
             return converter;
         }
 
-        converter = router.getValueConverter(paramType);
+        converter = router.getValueConverterByTargetType(paramType);
         return converter;
     }
 
