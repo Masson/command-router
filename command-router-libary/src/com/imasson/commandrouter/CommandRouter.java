@@ -7,7 +7,6 @@ import com.imasson.commandrouter.converter.ValueConverterException;
 import com.imasson.commandrouter.driver.AbstractDriver;
 import com.imasson.commandrouter.driver.DriverException;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
