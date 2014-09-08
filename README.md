@@ -3,18 +3,26 @@ CommandRouter
 
 A simple tool help you convert textual command to method call for Java/Android.
 
+
 ## Quick start
+
 if you want to parse a textual command like this:
+
 ```
-"cmd://trial/show?msg=helloworld&repeat=3 
+"cmd://trial/show?msg=helloworld&repeat=3
 ```
+
 in order to execute the follow code:
+
 ```java
 for (int i = 0; i < 3; i++) {
    System.out.println("helloworld")
 }
+
 ```
+
 You don't need to write any code to parse text and do the conditional. Use annotations of CommandRouter to define a handler:
+
 ```java
 @HandlerAlias("trial")
 public class TestHandler extends CommandHandler {
@@ -24,16 +32,20 @@ public class TestHandler extends CommandHandler {
                          @ParamAlias("msg") String text,
                          @ParamAlias("repeat") int repeatTimes) {
         for (int i = 0; i < repeatTimes; i++) {
-            System.out.println("helloworld")
+            System.out.println(text);
         }
     }
 }
 ```
+
 and just 'execute' the command by CommandRouter:
+
 ```java
 router.executeCommand(this, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
+
 Enjoy the clean code!
+
 
 ## Usage
 
@@ -48,7 +60,7 @@ Use these three important annotations to decorate your class:
  - **```ParamAlias```**: define a param of the command. There is 2 optional field:
   - ```defaultRaw```: the textual value before unmashell.
   - ```converter```: the converter class to handler this type of param.
-     
+
 ```java
 @HandlerAlias("trial")
 public class TestHandler extends CommandHandler {
@@ -75,6 +87,7 @@ JsonDriver*        | Json             | ```{handler:"trial", command:"show",para
 CommandLineDriver* | shell-style      | ```trial show --msg helloworld```
 
 Recommend to use ```CommandRouterBuilder``` to build router instance:
+
 ```java
 CommandRouter router = new CommandRouterBuilder()
                 .setDriver(new UriDriver())
@@ -86,6 +99,7 @@ CommandRouter router = new CommandRouterBuilder()
 ### STEP 3: execute the command
 
 Execute the textual command by CommandRouter where you need it. Your context object will pass to the command method.
+
 ```java
 router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 ```
@@ -93,15 +107,24 @@ router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 ### Using in android
 
 Ensure that this line is added to your proguard config:
+
 ```
 -keepattributes *Annotation*
 ```
 
+
 ## Advanced (coming soon)
 
-**custom value converter**
+### custom value converter
 
-**parse custom command**
+### handle unknown command
+
+### build command
+
+### use return value
+
+### parse custom command
+
 
 ## License
 
