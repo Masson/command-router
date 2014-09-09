@@ -24,5 +24,10 @@ public class Main {
         // Sample 2: custom converter
         final String rawCommand2 = "kk://trial/locate?addr=N%20Western%20Avenue,Chicago,90027";
         router.executeCommand(null, rawCommand2);
+
+        // Sample 3: use return value
+        final String rawCommand3 = "kk://trial/sayHello";
+        String ret = (String) router.executeCommand(null, rawCommand3);
+        System.out.println("'kk://trial/sayHello' outputs '" + ret + "'");
     }
 }

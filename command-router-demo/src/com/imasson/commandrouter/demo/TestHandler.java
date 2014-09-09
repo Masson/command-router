@@ -21,6 +21,11 @@ public class TestHandler extends CommandHandler {
         System.out.println("show address: " + address.toString());
     }
 
+    @CommandAlias()
+    public String sayHello(Object context) {
+        return "hello, world";
+    }
+
     @Override
     protected void onUnknownCommand(String command) {
         super.onUnknownCommand(command);

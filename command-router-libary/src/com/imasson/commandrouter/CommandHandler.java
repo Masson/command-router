@@ -128,7 +128,7 @@ public abstract class CommandHandler {
         return converter;
     }
 
-    void executeCommand(CommandRouter router, CommandRouter.Op op) throws CommandHandlerException {
+    Object executeCommand(CommandRouter router, CommandRouter.Op op) throws CommandHandlerException {
         setup(router);
 
         final String commandName = op.getCommandName();
@@ -136,7 +136,7 @@ public abstract class CommandHandler {
 
         if (meta == null) {
             onUnknownCommand(commandName);
-            return;
+            return null;
         }
 
         Object[] params = generateParams(op, meta);
@@ -145,12 +145,14 @@ public abstract class CommandHandler {
         paramTypes[0] = meta.contextType;
         System.arraycopy(meta.paramTypes, 0, paramTypes, 1, meta.paramTypes.length);
 
+        Object result;
         try {
             Method method = getClass().getMethod(meta.method, paramTypes);
-            method.invoke(this, params);
+            result = method.invoke(this, params);
         } catch (Exception e) {
             throw new CommandHandlerException(e, op);
         }
+        return result;
     }
 
     private Object[] generateParams(CommandRouter.Op op, CommandMeta meta) throws CommandHandlerException {

@@ -146,12 +146,12 @@ public final class CommandRouter {
         this.debug = debug;
     }
 
-    public void executeCommand(Object context, Object... args) {
+    public Object executeCommand(Object context, Object... args) {
         Op op;
         try {
             op = mDriver.parseCommand(context, args);
         } catch (DriverException ex) {
-            if (!debug) return;
+            if (!debug) return null;
             throw new CommandRouterException(ex);
         }
 
@@ -160,18 +160,20 @@ public final class CommandRouter {
             if (mDefaultHandler != null) {
                 handler = mDefaultHandler;
             } else {
-                if (!debug) return;
+                if (!debug) return null;
                 throw new CommandRouterException("CommandHandler not found", op);
             }
         }
 
+        Object result = null;
         try {
-            handler.executeCommand(this, op);
+            result = handler.executeCommand(this, op);
         } catch (CommandHandlerException ex) {
             if (debug) throw ex;
         } catch (ValueConverterException ex) {
             if (debug) throw ex;
         }
+        return result;
     }
 
     public String dump() {
