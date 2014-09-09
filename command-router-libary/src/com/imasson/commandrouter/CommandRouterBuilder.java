@@ -90,6 +90,8 @@ public final class CommandRouterBuilder {
         addValueConverter(int.class, new IntegerConverter());
         addValueConverter(long.class, new LongConverter());
         addValueConverter(String.class, new StringConverter());
+        addValueConverter(double.class, new DoubleConverter());
+        addValueConverter(java.util.Date.class, new DateConverter());
         return this;
     }
 
