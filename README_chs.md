@@ -135,7 +135,7 @@ router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 - double
 - string
 - boolean
-- java.lang.Date
+- java.util.Date
 
 上述类型的值将会被自动转换，但某些场景下我们希望使用自定义的类型作为参数，这时候就需要创建自定义的值转换器了。
 例如下面命令中的 *addr* 参数，其对应Java类是Address：
@@ -176,7 +176,7 @@ public class AddressConverter implements ValueConverter {
 
 有了值转换器后，我们还需要让 *CommandRouter* 知道你要用它来转换addr参数，我们有两种方法来达到这个目的：
 
-方法一：在 ```CommandRouter``` 中注册这个值转换器，注册后将和int、float等转换器一样是一等公民。
+**方法一：**在 ```CommandRouter``` 中注册这个值转换器，注册后将和int、float等转换器一样是一等公民。
 这种方法的好处是命令参数的定义方法与基本类型一样简单，但缺点是你需要获取 ```CommandRouter``` 的实例来进行值转换器的注册。
 
 ```java
@@ -190,7 +190,7 @@ public void showAddress(Object context, @ParamAlias("addr") Address address) {
 }
 ```
 
-方法二：直接在 ```ParamAlias``` 注解中指定值转换器。
+**方法二：**直接在 ```ParamAlias``` 注解中指定值转换器。
 这种做法的好处是不需要你操作```CommandRouter``` ，但缺点是每个该类型参数的 ```ParamAlias``` 注解都需要指定值转换器。
 
 ```java
@@ -248,7 +248,7 @@ String commandText = (String) router.buildCommand(op);
 
 ```java
 @CommandAlias()
-public void sayHello(Object context) {
+public String sayHello(Object context) {
     // some code ...
     return "hello, world";
 }
