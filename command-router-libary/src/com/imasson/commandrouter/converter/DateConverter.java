@@ -62,7 +62,7 @@ public class DateConverter implements ValueConverter {
     @Override
     public Object unmarshal(String source, Class<?> type) throws ValueConverterException {
         setupIfNeed();
-        if (source == null) {
+        if (source == null || source.length() == 0) {
             return new Date(0L);
         }
 
