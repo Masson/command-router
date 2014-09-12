@@ -1,7 +1,7 @@
 CommandRouter
 ==============
 
-一个帮助你将文本命令转化为对特定方法调用的工具，适用于Java或Android。
+命令路由器，一个帮助你将文本命令转化为对特定方法调用的工具，适用于Java或Android。
 
 
 ## 快速上手
@@ -21,7 +21,7 @@ for (int i = 0; i < 3; i++) {
 ```
 
 传统的做法是进行字符串的解析，然后通过冗长的if-else代码，根据内容找到需要调用的方法。
-更加麻烦的是你还要进行参数类型的转换，比如把字符串解析成int。当你要加入新类型命令时，也要修改不少代码。
+更加麻烦的是你还要进行参数类型的转换，比如把字符串解析成int。当你要加入新命令时，也要修改不少代码。
 
 当你使用 **CommandRouter（命令路由器）**，上述的步骤都可以省去，只需关注核心业务代码。
 利用其注解方式可轻松定义一个命令处理器：
@@ -61,7 +61,7 @@ Enjoy the clean code!
  - **```CommandAlias```**: 定义命令方法的名字，一个命令可以有多个别名，假如名字为空的话，将使用被注解方法的名字。
  - **```ParamAlias```**: 定义命令参数的名字(key)，另外还有2个可选的选项:
   - ```defaultRaw```: 参数默认值（使用原始文本进行表示）；
-  - ```converter```: 用于解析该参数的自定义转换期的类名（必须先注册）。
+  - ```converter```: 用于解析该参数的自定义转换器的类名。
 
 > 注意：要处理的命令参数必须是以Key-Value的形式存储的。
 
@@ -84,7 +84,7 @@ public class TestHandler extends CommandHandler {
 
 ### STEP 2: 创建命令路由器 CommandRouter 的实例
 
-再创建```CommandRouter```之前，你需要根据要解析的文本命令的格式，选择正确的```CommandDriver```作为解析器。
+在创建```CommandRouter```之前，你需要根据要解析的文本命令的格式，选择正确的```CommandDriver```作为解析器。
 目前最新版本已经内建下面几种命令格式的支持:
 
 解析器名称           | 格式              | 命令示例
@@ -133,12 +133,12 @@ router.executeCommand(context, "cmd://trial/show?msg=helloworld&repeat=3");
 - long
 - float
 - double
-- string
 - boolean
+- java.lang.String
 - java.util.Date
 
 上述类型的值将会被自动转换，但某些场景下我们希望使用自定义的类型作为参数，这时候就需要创建自定义的值转换器了。
-例如下面命令中的 *addr* 参数，其对应Java类是Address：
+例如下面命令中的 *addr* 参数，其对应Java类是 *Address*：
 
 ```
 cmd://trial/locate?addr=N%20Western%20Avenue,Chicago,90027
@@ -232,6 +232,7 @@ public class TestHandler extends CommandHandler {
 ```java
 CommandRouter.Op op = new CommandRouter.Op(null, "trial", "showText");
 op.addArgument("msg", "hello,world");
+op.addArgument("repeat", 3);
 ```
 
 接着使用```CommandRouter```的```buildCommand()```方法转换并输出后的命令即可：
