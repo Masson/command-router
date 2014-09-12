@@ -135,7 +135,7 @@ public abstract class CommandHandler {
         CommandMeta meta = mCommandMap.get(commandName);
 
         if (meta == null) {
-            onUnknownCommand(commandName);
+            onUnknownCommand(op.getContext(), commandName);
             return null;
         }
 
@@ -177,7 +177,7 @@ public abstract class CommandHandler {
 
     protected void onSetup() {}
 
-    protected void onUnknownCommand(String command) {}
+    protected void onUnknownCommand(Object context, String command) {}
 
 
     String dump() {

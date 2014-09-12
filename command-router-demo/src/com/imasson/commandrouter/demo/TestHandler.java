@@ -27,8 +27,8 @@ public class TestHandler extends CommandHandler {
     }
 
     @Override
-    protected void onUnknownCommand(String command) {
-        super.onUnknownCommand(command);
+    protected void onUnknownCommand(Object context, String command) {
+        super.onUnknownCommand(context, command);
         System.out.println("unknown command: " + command);
     }
 }
