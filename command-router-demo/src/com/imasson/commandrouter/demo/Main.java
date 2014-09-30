@@ -18,16 +18,16 @@ public class Main {
 
 
         // Sample 1: hello world
-        final String rawCommand1 = "kk://trial/show?msg=helloworld";
+        final String rawCommand1 = "demo://trial/show?msg=helloworld";
         router.executeCommand("I'm context", rawCommand1);
 
         // Sample 2: custom converter
-        final String rawCommand2 = "kk://trial/locate?addr=N%20Western%20Avenue,Chicago,90027";
+        final String rawCommand2 = "demo://trial/locate?addr=N%20Western%20Avenue,Chicago,90027";
         router.executeCommand(null, rawCommand2);
 
         // Sample 3: use return value
-        final String rawCommand3 = "kk://trial/sayHello";
+        final String rawCommand3 = "demo://trial/sayHello";
         String ret = (String) router.executeCommand(null, rawCommand3);
-        System.out.println("'kk://trial/sayHello' outputs '" + ret + "'");
+        System.out.println("'demo://trial/sayHello' outputs '" + ret + "'");
     }
 }
