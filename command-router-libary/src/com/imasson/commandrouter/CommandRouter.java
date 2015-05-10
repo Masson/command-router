@@ -176,6 +176,30 @@ public final class CommandRouter {
         return result;
     }
 
+    public String executeCommandMarshalled(Object context, Object... args) {
+        Object result = executeCommand(context, args);
+        if (result == null) {
+            if (!debug) return null;
+            throw new CommandRouterException("Cannot get non-null return value from the command");
+        }
+
+        ValueConverter converter = getValueConverterByTargetType(result.getClass());
+        if (converter == null) {
+            if (!debug) return null;
+            throw new CommandRouterException("Cannot find ValueConverter for the return value in class: "
+                    + result.getClass().getName());
+        }
+
+        String marshalledResult;
+        try {
+            marshalledResult = converter.marshal(result);
+        } catch (ValueConverterException e) {
+            if (!debug) return null;
+            throw new CommandRouterException("Cannot marshal the return value", e);
+        }
+        return marshalledResult;
+    }
+
     public String dump() {
         StringBuilder sb = new StringBuilder("==== CommandRouter ===================\n");
 
